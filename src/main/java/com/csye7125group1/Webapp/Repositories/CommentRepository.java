@@ -8,9 +8,9 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface CommentRepository extends CrudRepository<TaskComments, String> {
 
-    @Query("select u from taskcomments u where u.reftaskid = ?1")
-    public TaskComments findCommentByTaskId(String reftaskid);
-
-    @Query("select count(u) from taskcomments u where u.reftaskid = ?1")
-    public long checkCount(String reftaskid);
+//    @Query("select u from taskcomments u where u.reftaskid = ?1")
+//    public TaskComments findCommentByTaskId(String reftaskid);
+//
+//    @Query("select count(u) from taskcomments u where u.reftaskid = ?1")
+//    public long checkCount(String reftaskid);
 }

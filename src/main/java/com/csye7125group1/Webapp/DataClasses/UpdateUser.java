@@ -8,8 +8,9 @@ public class UpdateUser {
     private String username;
     private String password;
 
-    public UpdateUser(String first_name, String last_name, String username, String password) {
+    public UpdateUser(String first_name, String middle_name, String last_name, String username, String password) {
         this.first_name = first_name;
+        this.middle_name = middle_name;
         this.last_name = last_name;
         this.username = username;
         this.password = password;
@@ -23,12 +24,12 @@ public class UpdateUser {
         this.first_name = first_name;
     }
 
-    public void setMiddle_name(String first_name) {
-        this.first_name = middle_name;
-    }
-
     public String getMiddle_name() {
         return middle_name;
+    }
+
+    public void setMiddle_name(String middle_name) {
+        this.middle_name = middle_name;
     }
 
     public String getLast_name() {
