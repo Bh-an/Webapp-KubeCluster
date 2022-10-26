@@ -7,9 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TaskRepository extends CrudRepository<UserLists, Integer> {
 
-    @Query("select u from users u where u.username = ?1")
-    public AppUser finduserbyusername(String username);
-
-    @Query("select count(u) from users u where u.username = ?1")
-    public long checkrecords(String username);
+//    @Query("select u from users u where u.username = ?1")
+//    public AppUser finduserbyusername(String username);
+//
+//    @Query("select count(u) from users u where u.username = ?1")
+//    public long checkrecords(String username);
 }

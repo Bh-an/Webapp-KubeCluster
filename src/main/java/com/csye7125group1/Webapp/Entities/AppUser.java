@@ -22,10 +22,10 @@ public class AppUser {
     private LocalDateTime account_updated;
 
 
-    @OneToMany(mappedBy = "appuser", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "appuser_list", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserLists> userlists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "appuser", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "appuser_tag", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TaskTags> usertags = new ArrayList<>();
 
     @JsonIgnore
@@ -50,10 +50,25 @@ public class AppUser {
         this.account_created = LocalDateTime.now();
         this.account_updated = LocalDateTime.now();
         this.password = newuser.getPassword();
-        this.userlists.add(new UserLists("default_list"));
+
     }
 
     public AppUser() {
+    }
+
+    public void addList(UserLists list){
+        this.userlists.add(list);
+    }
+
+    public String showlistnames(){
+
+        String names = new String();
+        for (UserLists val : this.getUserlists()){
+
+            names = names + val.getListname() + " ";
+        }
+
+        return names;
     }
 
     public String getId() {
@@ -68,8 +83,8 @@ public class AppUser {
         return first_name;
     }
 
-    public void setMiddle_name(String first_name) {
-        this.first_name = middle_name;
+    public void setMiddle_name(String middle_name) {
+        this.middle_name = middle_name;
     }
 
     public String getMiddle_name() {
@@ -120,17 +135,44 @@ public class AppUser {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "Appuser{" +
-                "id='" + userid + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
-                ", username='" + username + '\'' +
-                ", account_created=" + account_created +
-                ", account_updated=" + account_updated +
-                '}';
+    public List<UserLists> getUserlists() {
+        return userlists;
     }
+
+    public void setUserlists(List<UserLists> userlists) {
+        this.userlists = userlists;
+    }
+
+    public List<TaskTags> getUsertags() {
+        return usertags;
+    }
+
+    public void setUsertags(List<TaskTags> usertags) {
+        this.usertags = usertags;
+    }
+
+
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Appuser{" +
+//                "id='" + userid + '\'' +
+//                ", first_name='" + first_name + '\'' +
+//                ", last_name='" + last_name + '\'' +
+//                ", username='" + username + '\'' +
+//                ", lists='" + this.showlistnames() + '\'' +
+//                ", account_created=" + account_created +
+//                ", account_updated=" + account_updated +
+//                '}';
+//    }
 
     public void accountupdate() {
         this.account_updated = LocalDateTime.now();

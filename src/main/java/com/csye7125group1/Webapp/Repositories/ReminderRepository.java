@@ -8,8 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ReminderRepository extends CrudRepository<TaskReminders, String> {
 
-    @Query("select u from taskreminders u where u.reftaskid = ?1")
-    public TaskReminders findReminderByTaskId(String reftaskid);
+//    @Query("select u from taskreminders u where u.reftaskid = ?1")
+//    public TaskReminders findReminderByTaskId(String reftaskid);
 
 //    @Query("select count(u) from users u where u.username = ?1")
 //    public long checkrecords(String username);
