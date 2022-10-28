@@ -40,6 +40,10 @@ public class Listcontroller {
             AppUser user = userRepository.finduserbyusername(authcreds[0]);
 
             if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                if (listRepository.checkrecords(newlist.getListname(), authcreds[0])!=0){
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
                 UserLists list = new UserLists(new CreateList(newlist.getListname()));
 
                 list.setAppuser(user);

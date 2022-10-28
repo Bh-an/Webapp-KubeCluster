@@ -15,4 +15,7 @@ public interface ListRepository extends CrudRepository<UserLists, String> {
 
     @Query("select u from userlists u where u.listname = ?1 and u.appuser_list.username = ?2")
     public UserLists getList(String listname, String username);
+
+    @Query("select count(u) from userlists u where u.listname = ?1 and u.appuser_list.username = ?2")
+    public long checkrecords(String listname, String username);
 }

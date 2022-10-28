@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
+@Entity(name="usertasks")
 @Table(name="usertasks")
 public class UserTasks {
 
@@ -40,7 +40,7 @@ public class UserTasks {
     public UserTasks() {    }
 
     public UserTasks(String taskid, String summary, LocalDate duedate, String task, LocalDateTime task_created, LocalDateTime task_updated, String state) {
-        this.taskid = taskid;
+        this.taskid = UUID.randomUUID().toString();
         this.summary = summary;
         this.duedate = duedate;
         this.task = task;
@@ -68,7 +68,7 @@ public class UserTasks {
         }
 
         if ( LocalDate.now().isAfter(date)){
-            return "TODO";
+            return "OVERDUE";
         }
 
         return "DUE_TODAY";
