@@ -2,8 +2,11 @@ package com.csye7125group1.Webapp.Utility;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class AppConfig {
@@ -17,4 +20,7 @@ public class AppConfig {
     public Authenticator getauthcreds() {
         return new Authenticator();
     }
+
+    @Bean
+    public ConnectionValidator checkConnection(){return new ConnectionValidator();}
 }

@@ -42,12 +42,18 @@ public class Taskcontroller {
             UserLists list = listRepository.getList(newtask.getListname(), authcreds[0]);
 
             if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                if (taskRepository.checkrecords(newtask.getTask(), authcreds[0])!=0){
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+
                 UserTasks task = new UserTasks(newtask);
 
-                list.addList(task);
-                listRepository.save(list);
+                task.setUserlist(list);
 
-                return new ResponseEntity<UserTasks>(task, HttpStatus.CREATED);
+                taskRepository.save(task);
+
+                return new ResponseEntity(HttpStatus.CREATED);
             }
 
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);

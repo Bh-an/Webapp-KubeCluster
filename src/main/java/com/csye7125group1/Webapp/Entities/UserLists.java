@@ -42,7 +42,7 @@ public class UserLists {
     @OneToMany(mappedBy = "userlist_task", fetch = FetchType.EAGER)
     private List<UserTasks> usertasks_list = new ArrayList<>();
 
-    public void addList(UserTasks task){
+    public void addTask(UserTasks task){
         this.usertasks_list.add(task);
     }
 
