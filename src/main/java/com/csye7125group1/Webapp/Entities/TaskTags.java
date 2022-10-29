@@ -1,9 +1,12 @@
 package com.csye7125group1.Webapp.Entities;
 
+import com.csye7125group1.Webapp.DataClasses.CreateTag;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Entity
+@Entity(name="tasktags")
 @Table(name="tasktags")
 public class TaskTags {
 
@@ -23,6 +26,17 @@ public class TaskTags {
 
 
     public TaskTags() {
+    }
+
+    public TaskTags(CreateTag newtag){
+        this.tagid = UUID.randomUUID().toString();
+        this.tag = newtag.getTag();
+        this.tag_created = LocalDateTime.now();
+        this.tag_updated = LocalDateTime.now();
+    }
+
+    public void updatetime() {
+        this.tag_updated = LocalDateTime.now();
     }
 
     public String getTagid() {

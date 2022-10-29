@@ -35,6 +35,10 @@ public class UserLists {
 
     public UserLists(){};
 
+    public void updatetime() {
+        this.list_updated = LocalDateTime.now();
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, optional =  false)
     @JoinColumn(name = "refuser", referencedColumnName = "userid")
     private AppUser appuser_list;

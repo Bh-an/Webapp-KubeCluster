@@ -1,15 +1,13 @@
 package com.csye7125group1.Webapp.Controllers;
 
 import com.csye7125group1.Webapp.DataClasses.CreateList;
-import com.csye7125group1.Webapp.DataClasses.CreateUser;
 import com.csye7125group1.Webapp.DataClasses.UpdateList;
-import com.csye7125group1.Webapp.DataClasses.UpdateUser;
 import com.csye7125group1.Webapp.Entities.AppUser;
 import com.csye7125group1.Webapp.Entities.UserLists;
+import com.csye7125group1.Webapp.Entities.UserTasks;
 import com.csye7125group1.Webapp.Repositories.ListRepository;
 import com.csye7125group1.Webapp.Repositories.UserRepository;
 import com.csye7125group1.Webapp.Utility.Authenticator;
-import com.csye7125group1.Webapp.Utility.EmailCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-public class Listcontroller {
+public class ListController {
 
     @Autowired
     private UserRepository userRepository;
@@ -79,5 +79,32 @@ public class Listcontroller {
         }
 
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping(path = "/v1/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> viewlists(@RequestHeader("Authorization") String authheader) {
+
+        String[] authcreds = authenticator.getauthcreds(authheader);
+
+        if (authcreds!=null){
+
+            AppUser user = userRepository.finduserbyusername(authcreds[0]);
+
+            if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                List<String> lists = new ArrayList<>();
+
+                for (UserLists list : user.getUserlists()){
+
+                    lists.add(list.getListname());
+                }
+
+                return new ResponseEntity<List<String>>(lists, HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
     }
 }
