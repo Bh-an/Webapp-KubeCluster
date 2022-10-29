@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class Maincontroller {
+public class MainController {
 
     @Autowired
     ConnectionValidator connvalidator;
 
-    private static final Logger logger = LoggerFactory.getLogger(Maincontroller.class);
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     @GetMapping(path = "/healthy", produces = MediaType.APPLICATION_JSON_VALUE)
     //@ResponseStatus(HttpStatus.OK)

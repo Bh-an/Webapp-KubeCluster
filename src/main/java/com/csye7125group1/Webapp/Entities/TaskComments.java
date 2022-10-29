@@ -1,7 +1,11 @@
 package com.csye7125group1.Webapp.Entities;
 
+import com.csye7125group1.Webapp.DataClasses.CreateComment;
+import javafx.concurrent.Task;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity(name="taskcomments")
 @Table(name="taskcomments")
@@ -18,6 +22,17 @@ public class TaskComments {
     private UserTasks usertask_comment;
 
     public TaskComments() {
+    }
+
+    public TaskComments(CreateComment newcomment){
+        this.commentid = UUID.randomUUID().toString();
+        this.comment = newcomment.getComment();
+        this.comment_created = LocalDateTime.now();
+        this.comment_updated = LocalDateTime.now();
+    }
+
+    public void updatetime() {
+        this.comment_updated = LocalDateTime.now();
     }
 
     public String getCommentid() {

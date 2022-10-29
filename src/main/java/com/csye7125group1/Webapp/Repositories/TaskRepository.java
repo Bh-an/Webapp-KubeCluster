@@ -14,8 +14,8 @@ public interface TaskRepository extends CrudRepository<UserTasks, String> {
 //    @Query("select count(u) from users u where u.username = ?1")
 //    public long checkrecords(String username);
 
-    @Query("select u from usertasks u where u.task = ?1 and u.userlist_task.listname = ?2 and u.userlist_task.appuser_list.username = ?3")
-    public UserTasks getTask(String task, String listname, String username);
+    @Query("select u from usertasks u where u.task = ?1 and u.userlist_task.appuser_list.username = ?2")
+    public UserTasks getTask(String task, String username);
 
     @Query("select count(u) from usertasks u where u.task = ?1 and u.userlist_task.appuser_list.username = ?2")
     public long checkrecords(String task, String username);

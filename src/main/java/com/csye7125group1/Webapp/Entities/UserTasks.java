@@ -61,6 +61,10 @@ public class UserTasks {
 
         }
 
+    public void updatetime() {
+        this.task_updated = LocalDateTime.now();
+    }
+
     public String evalstate(LocalDate date){
 
         if ( LocalDate.now().isBefore(date)){

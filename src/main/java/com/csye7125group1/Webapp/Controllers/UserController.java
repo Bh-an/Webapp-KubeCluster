@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-public class Usercontroller {
+public class UserController {
 
     @Autowired
     private UserRepository userRepository;
