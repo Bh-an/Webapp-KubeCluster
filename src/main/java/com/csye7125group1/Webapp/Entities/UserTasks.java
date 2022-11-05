@@ -174,6 +174,12 @@ public class UserTasks {
         this.userlist_task = userlist;
     }
 
+    public UserLists getUserlist_task() {
+        return userlist_task;
+    }
 
+    public void setUserlist_task(UserLists userlist_task) {
+        this.userlist_task = userlist_task;
+    }
 }
 
