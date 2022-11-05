@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -48,6 +49,10 @@ public class TagController {
 
             if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])!=0){
                 return new ResponseEntity<String>("Tag already exists", HttpStatus.BAD_REQUEST);
+            }
+
+            if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])>10){
+                return new ResponseEntity<String>("Maximum number of tags ", HttpStatus.BAD_REQUEST);
             }
 
             AppUser user = userRepository.finduserbyusername(authcreds[0]);
@@ -85,6 +90,14 @@ public class TagController {
                 return new ResponseEntity<String>("Task doesn't exist", HttpStatus.BAD_REQUEST);
             }
 
+            if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])!=0){
+                return new ResponseEntity<String>("Tag already exists", HttpStatus.BAD_REQUEST);
+            }
+
+            if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])>10){
+                return new ResponseEntity<String>("Maximum number of tags ", HttpStatus.BAD_REQUEST);
+            }
+
             AppUser user = userRepository.finduserbyusername(authcreds[0]);
 
             if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
@@ -119,7 +132,81 @@ public class TagController {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
+    @GetMapping(path = "/v1/user/showtag", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> viewtag(@RequestHeader("Authorization") String authheader) {
+
+        String[] authcreds = authenticator.getauthcreds(authheader);
+
+        if (authcreds!=null){
+
+            AppUser user = userRepository.finduserbyusername(authcreds[0]);
+
+            if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                List<String> tags = new ArrayList<>();
+
+                for (TaskTags tag : user.getUsertags()){
+                    tags.add(tag.getTag());
+                }
+
+                return new ResponseEntity<List<String>>(tags, HttpStatus.OK);
+
+            }
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+    }
+
 //
+
+    @DeleteMapping(path = "/v1/task/removetag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> removetag(@RequestBody CreateTag oldtag, @RequestHeader("Authorization") String authheader) {
+        String[] authcreds = authenticator.getauthcreds(authheader);
+
+        if (authcreds != null) {
+
+            AppUser user = userRepository.finduserbyusername(authcreds[0]);
+            boolean fields = false;
+
+            if (userRepository.checkrecords(authcreds[0])==0){
+
+                return new ResponseEntity<String>("User Doesn't exist", HttpStatus.BAD_REQUEST);
+            }
+
+            if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                if (tagRepository.checkrecords(oldtag.getTag(), user.getUsername())==0) {
+                    return new ResponseEntity<String>("Tag does not exist", HttpStatus.BAD_REQUEST);
+                }
+
+                if (taskRepository.checkrecords(oldtag.getTask(), authcreds[0])==0){
+                    return new ResponseEntity<String>("Task doesn't exist", HttpStatus.BAD_REQUEST);
+                }
+
+                UserTasks task = taskRepository.getTask(oldtag.getTask(), authcreds[0]);
+
+                List<TaskTags> newlist = task.getTasktags();
+
+                TaskTags tag = tagRepository.getTag(oldtag.getTag(), authcreds[0]);
+
+                newlist.remove(tag);
+
+                task.setTasktags(newlist);
+
+                taskRepository.save(task);
+
+
+                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+        }
+
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    }
 
     @DeleteMapping(path = "/v1/tag", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deletetag(@RequestBody CreateTag oldtag, @RequestHeader("Authorization") String authheader) {

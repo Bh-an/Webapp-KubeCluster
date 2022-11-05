@@ -1,10 +1,10 @@
 package com.csye7125group1.Webapp.Controllers;
 
-import com.csye7125group1.Webapp.DataClasses.CreateList;
-import com.csye7125group1.Webapp.DataClasses.CreateUser;
-import com.csye7125group1.Webapp.DataClasses.UpdateUser;
+import com.csye7125group1.Webapp.DataClasses.*;
 import com.csye7125group1.Webapp.Entities.AppUser;
+import com.csye7125group1.Webapp.Entities.TaskTags;
 import com.csye7125group1.Webapp.Entities.UserLists;
+import com.csye7125group1.Webapp.Entities.UserTasks;
 import com.csye7125group1.Webapp.Repositories.ListRepository;
 import com.csye7125group1.Webapp.Repositories.UserRepository;
 import com.csye7125group1.Webapp.Utility.Authenticator;
@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -102,6 +104,8 @@ public class UserController {
 
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
+
+
 
     }
 

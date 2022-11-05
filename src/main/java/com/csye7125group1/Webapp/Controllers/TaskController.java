@@ -12,7 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class TaskController {
@@ -158,4 +161,69 @@ public class TaskController {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
+
+    @GetMapping(path = "/v1/task/show", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ShowTask> viewtask(@RequestBody UpdateTask updatedtask, @RequestHeader("Authorization") String authheader) {
+
+        String[] authcreds = authenticator.getauthcreds(authheader);
+
+        if (authcreds!=null){
+
+            AppUser user = userRepository.finduserbyusername(authcreds[0]);
+
+            if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                UserTasks task = taskRepository.getTask(updatedtask.getTaskname(), authcreds[0]);
+
+//                task.setUserlist_task(null);
+
+                ShowTask showtask = new ShowTask(task);
+
+//                Map<String, List<String>> responsemap = new HashMap<String, List<String>>();
+
+
+
+                return new ResponseEntity<ShowTask>(showtask, HttpStatus.OK);
+
+            }
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @GetMapping(path = "/v1/task", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> viewtasks(@RequestBody CreateList targetlist, @RequestHeader("Authorization") String authheader) {
+
+        String[] authcreds = authenticator.getauthcreds(authheader);
+
+        if (authcreds!=null){
+
+            AppUser user = userRepository.finduserbyusername(authcreds[0]);
+
+            if (passwordEncoder.matches(authcreds[1], user.getPassword())) {
+
+                UserLists list = listRepository.getList(targetlist.getListname(), authcreds[0]);
+
+//                task.setUserlist_task(null);
+                List<String> tasklist = new ArrayList<>();
+
+                for (UserTasks task : list.getUsertasks()){
+                    tasklist.add(task.getTask());
+                }
+
+//                Map<String, List<String>> responsemap = new HashMap<String, List<String>>();
+
+
+
+                return new ResponseEntity<List<String>>(tasklist, HttpStatus.OK);
+
+            }
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+    }
 }
