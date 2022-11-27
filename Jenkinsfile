@@ -17,6 +17,7 @@ pipeline {
         sh "npm install @semantic-release/exec -D"
         sh  "npm install semantic-release-yaml -D"
         sh "npm install semantic-release/changelog -D"
+        sh "npm install @semantic-release-plus/docker -D"
         sh  "npx semantic-release --debug"
             }
         }
