@@ -2,8 +2,8 @@ branches: ['main']
 
 plugins:
   - "@semantic-release/commit-analyzer"
+  - "@semantic-release-docker"
   - - "@semantic-release/exec"
-  - - "semantic-release-docker"
     - prepareCmd: "
         docker build -t csye7125group01/java_image .
         docker push csye7125group01/java_image
