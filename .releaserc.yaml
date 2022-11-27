@@ -2,7 +2,8 @@ branches: ['main']
 
 plugins:
   - "@semantic-release/commit-analyzer"
-  - "@semantic-release-plus/docker"
+  - - "@semantic-release-plus/docker"
+    - name: "docker.io/csye7125group01/java_image"
   - - "@semantic-release/exec"
     - prepareCmd: "
         docker build -t csye7125group01/java_image .
@@ -21,7 +22,7 @@ plugins:
   #       \n
   #       ${nextRelease.notes}
   # - - "@semantic-release/github"
-    - assets:
-        - path:
-            - dist/*tgz
+    # - assets:
+    #     - path:
+    #         - dist/*tgz
 repositoryUrl: https://github.com/csye7125-fall2022-group01/webapp.git
