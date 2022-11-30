@@ -41,5 +41,28 @@ pipeline {
             }
         }
 
+        stage('Get Helm Release') {
+            steps{
+                sh'''
+                URL=$(curl \
+                -H "Authorization: Bearer $GITHUB_TOKEN" \
+                -s https://api.github.com/repos/csye7125-fall2022-group01/helm-chart/releases/latest \
+                | jq -r ".assets[] | select(.name | test(\"${spruce_type}\")) | .url")
+
+                curl -LJ $URL \
+                -H "Authorization: Bearer $GITHUB_TOKEN" \
+                -H 'Accept: application/octet-stream' \
+                -o webapp.tgz
+                '''
+            }
+        }
+
+        stage('Helm Release') {
+            steps{
+                sh'''
+                helm upgrade webapp webapp.tgz -i
+                '''
+            }
+        }
     }
 }
