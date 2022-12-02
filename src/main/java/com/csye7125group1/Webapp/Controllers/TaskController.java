@@ -3,7 +3,10 @@ package com.csye7125group1.Webapp.Controllers;
 import com.csye7125group1.Webapp.DataClasses.*;
 import com.csye7125group1.Webapp.Entities.*;
 import com.csye7125group1.Webapp.Repositories.*;
+import com.csye7125group1.Webapp.Services.KafkaPublishService;
 import com.csye7125group1.Webapp.Utility.Authenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,10 +37,16 @@ public class TaskController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private Authenticator authenticator;
+    @Autowired
+    KafkaPublishService kafkaProducer;
+
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @PostMapping(path = "/v1/task/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserTasks> createtask(@Valid @RequestBody CreateTask newtask, @RequestHeader("Authorization") String authheader) {
         String[] authcreds = authenticator.getauthcreds(authheader);
+
+        logger.info("v1/task/create API called with username: " +  authcreds[0]);
 
         if (authcreds != null) {
 
@@ -55,6 +64,12 @@ public class TaskController {
                 task.setUserlist(list);
 
                 taskRepository.save(task);
+
+                logger.info("Task created with id: " +  task.getTaskid());
+
+                SearchTask esTask = new SearchTask(task, authcreds[0]);
+
+                kafkaProducer.sendMessage(esTask);
 
                 return new ResponseEntity(HttpStatus.CREATED);
             }
