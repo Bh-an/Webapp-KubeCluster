@@ -15,6 +15,8 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 
 @Configuration
 @EnableElasticsearchRepositories(basePackages
@@ -28,20 +30,18 @@ public class ElasticSearchClientConfiguration{
     private int portno;
 
     @Bean
-    public ElasticsearchClient getElasticSearchClient(){
+    public RestHighLevelClient client() {
+        ClientConfiguration clientConfiguration 
+            = ClientConfiguration.builder()
+                .connectedTo(hostname+":"+portno)
+                .build();
 
-        RestClient httpClient = RestClient.builder(
-                new HttpHost(hostname, portno)
-        ).build();
+        return RestClients.create(clientConfiguration).rest();
+    }
 
-        ElasticsearchTransport transport = new RestClientTransport(
-                httpClient,
-                new JacksonJsonpMapper()
-        );
-
-        ElasticsearchClient esClient = new ElasticsearchClient(transport);
-
-        return esClient;
+    @Bean
+    public ElasticsearchOperations elasticsearchTemplate() {
+        return new ElasticsearchRestTemplate(client());
     }
 }
 

@@ -1,5 +1,7 @@
-package com.csye7125group1.Webapp.Utility;
+package com.csye7125group1.Webapp.Configurations;
 
+import com.csye7125group1.Webapp.Utility.Authenticator;
+import com.csye7125group1.Webapp.Utility.ConnectionValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceUtils;
