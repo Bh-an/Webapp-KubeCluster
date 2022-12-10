@@ -58,11 +58,9 @@ pipeline {
         }
 
         stage('Helm Release') {
-            steps{
-                sh'''
-                helm upgrade webapp webapp.tgz -i
-                '''
-            }
+            withKubeConfig([credentialsId: 'jenkins-agent', serverUrl: 'https://api.kops.prod.applicationbhan.me']) {
+            sh 'helm list'
+    }
         }
     }
 }
