@@ -58,9 +58,11 @@ pipeline {
         }
 
         stage('Helm Release') {
-            withKubeConfig([credentialsId: 'jenkins-agent', serverUrl: 'https://api.kops.prod.applicationbhan.me']) {
-            sh 'helm list'
-    }
+            steps{
+                withKubeConfig([credentialsId: 'jenkins-agent', serverUrl: 'https://api.kops.prod.applicationbhan.me']) {
+                sh 'helm list'
+                }
+            }
         }
     }
 }
