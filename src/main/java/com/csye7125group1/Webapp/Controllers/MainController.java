@@ -21,7 +21,7 @@ public class MainController {
     //@ResponseStatus(HttpStatus.OK)
     public ResponseEntity health() {
 //        statsd.incrementCounter("server.get.healthy");
-        logger.info("Healthy endpoint called");
+//        logger.info("Healthy endpoint called");
 //        Healthzresponse response = new Healthzresponse("Success");
         return new ResponseEntity(HttpStatus.OK);
 
@@ -37,6 +37,7 @@ public class MainController {
         if (connvalidator.checkConnection()){
             return new ResponseEntity(HttpStatus.OK);
         }
+        logger.error("Ready endpoint unavailable");
         return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
 
     }

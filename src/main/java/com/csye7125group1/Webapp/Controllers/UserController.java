@@ -9,6 +9,8 @@ import com.csye7125group1.Webapp.Repositories.ListRepository;
 import com.csye7125group1.Webapp.Repositories.UserRepository;
 import com.csye7125group1.Webapp.Utility.Authenticator;
 import com.csye7125group1.Webapp.Utility.EmailCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import java.util.List;
 @RestController
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -34,6 +37,7 @@ public class UserController {
 
     @PostMapping(path = "/v1/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createuser(@Valid @RequestBody CreateUser newuser){
+        logger.info("create user endpoint called");
         if(!EmailCheck.checkEmail(newuser.getUsername())){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -51,13 +55,14 @@ public class UserController {
         listRepository.save(newlist);
 
         AppUser responseuser = userRepository.finduserbyusername(newuser.getUsername());
+        logger.info("create user call end: Created user");
         return new ResponseEntity<AppUser>(responseuser, HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/v1/user/self", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppUser> updateuser(@RequestBody UpdateUser newuser, @RequestHeader("Authorization") String authheader){
         String[] authcreds = authenticator.getauthcreds(authheader);
-
+        logger.info("update user endpoint called");
         if (authcreds!=null){
 
             AppUser user = userRepository.finduserbyusername(authcreds[0]);
@@ -95,13 +100,14 @@ public class UserController {
                 }
                 user.accountupdate();
                 userRepository.save(user);
+                logger.info("update user call end: Succesful");
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
-
+            logger.warn("update user call end: Unauthorised");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
         }
-
+        logger.warn("update user call end: Unauthorised");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
