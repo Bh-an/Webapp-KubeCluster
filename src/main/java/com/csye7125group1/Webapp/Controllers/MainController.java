@@ -37,6 +37,7 @@ public class MainController {
         if (connvalidator.checkConnection()){
             return new ResponseEntity(HttpStatus.OK);
         }
+        logger.error("Ready endpoint unavailable");
         return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
 
     }

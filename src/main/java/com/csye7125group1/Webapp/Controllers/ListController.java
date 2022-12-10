@@ -51,13 +51,13 @@ public class ListController {
 
                 list.setAppuser(user);
                 listRepository.save(list);
-                logger.info("list create call end");
+                logger.info("list create call end: Succesful");
                 return new ResponseEntity<String>(list.getListname(), HttpStatus.CREATED);
             }
-            logger.info("list create call end");
+            logger.info("list create call end: Unauthorized");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
-        logger.info("list create call end");
+        logger.info("list create call end: Unauthorized");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
@@ -76,14 +76,14 @@ public class ListController {
                 list.setListname(newlist.getNewlistname());
 
                 listRepository.save(list);
-                logger.info("update list call end");
+                logger.info("update list call end: Succesful");
                 return new ResponseEntity<String>("Old list name: " + newlist.getOldlistname() + "\nNew list name: " + list.getListname(), HttpStatus.CREATED);
             }
-            logger.info("update list call end");
+            logger.warn("update list call end: Unauthorized");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
-        logger.info("update list call end");
+        logger.warn("update list call end: Unauthorized");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
@@ -105,14 +105,14 @@ public class ListController {
                     lists.add(list.getListname());
                 }
 
-                logger.info("view list call end");
+                logger.info("view list call end: Succesful");
                 return new ResponseEntity<List<String>>(lists, HttpStatus.OK);
             }
-            logger.info("view list call end");
+            logger.warn("view list call end: Unauthorized");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
-        logger.info("view list call end");
+        logger.warn("view list call end: Unauthorized");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
     }

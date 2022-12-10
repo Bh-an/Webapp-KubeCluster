@@ -47,15 +47,17 @@ public class TagController {
         if (authcreds!=null){
 
             if (userRepository.checkrecords(authcreds[0])==0){
-
+                logger.warn("create tag call end: Bad Request (User Doesn't exist)");
                 return new ResponseEntity<String>("User Doesn't exist", HttpStatus.BAD_REQUEST);
             }
 
             if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])!=0){
+                logger.warn("create tag call end: Bad Request (Tag already exists)");
                 return new ResponseEntity<String>("Tag already exists", HttpStatus.BAD_REQUEST);
             }
 
             if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])>10){
+                logger.warn("create tag call end: Bad Request (Maximum number of tags)");
                 return new ResponseEntity<String>("Maximum number of tags ", HttpStatus.BAD_REQUEST);
             }
 
@@ -69,15 +71,15 @@ public class TagController {
                 tag.setAppuser(user);
 
                 tagRepository.save(tag);
-                logger.info("create tag call end");
+                logger.info("create tag call end: Succesful");
                 return new ResponseEntity(HttpStatus.CREATED);
             }
 
-            logger.info("create tag call end");
+            logger.warn("create tag call end: Unauthorized");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
-        logger.info("create tag call end");
+        logger.warn("create tag call end: Unauthorized");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
@@ -89,22 +91,22 @@ public class TagController {
         if (authcreds!=null){
 
             if (userRepository.checkrecords(authcreds[0])==0){
-                logger.info("create task tag call end");
+                logger.warn("create task tag call end (User Doesn't exist)");
                 return new ResponseEntity<String>("User Doesn't exist", HttpStatus.BAD_REQUEST);
             }
 
             if (taskRepository.checkrecords(newtag.getTask(), authcreds[0])==0){
-                logger.info("create task tag call end");
+                logger.warn("create task tag call end (Task doesn't exist)");
                 return new ResponseEntity<String>("Task doesn't exist", HttpStatus.BAD_REQUEST);
             }
 
             if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])!=0){
-                logger.info("create task tag call end");
+                logger.warn("create task tag call end (Tag already exists)");
                 return new ResponseEntity<String>("Tag already exists", HttpStatus.BAD_REQUEST);
             }
 
             if (tagRepository.checkrecords(newtag.getTag(), authcreds[0])>10){
-                logger.info("create task tag call end");
+                logger.warn("create task tag call end (Maximum number of tags)");
                 return new ResponseEntity<String>("Maximum number of tags ", HttpStatus.BAD_REQUEST);
             }
 
@@ -121,7 +123,7 @@ public class TagController {
 
                     tag.updatetime();
                     tagRepository.save(tag);
-                    logger.info("create task tag call end");
+                    logger.info("create task tag call end: Succesful");
 
                     return new ResponseEntity( HttpStatus.CREATED);
                 }
@@ -134,7 +136,7 @@ public class TagController {
                 tag.updatetime();
                 tagRepository.save(tag);
 
-                logger.info("create task tag call end");
+                logger.info("create task tag call end: Succesful");
                 return new ResponseEntity(HttpStatus.CREATED);
             }
 

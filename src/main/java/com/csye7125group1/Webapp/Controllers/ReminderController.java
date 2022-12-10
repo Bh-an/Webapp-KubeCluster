@@ -48,11 +48,11 @@ public class ReminderController {
         if (authcreds!=null){
 
             if (userRepository.checkrecords(authcreds[0])==0 || taskRepository.checkrecords(newreminder.getTaskname(), authcreds[0])==0){
-                logger.info("create reminder call end");
+                logger.warn("create reminder call end: Bad Request");
                 return new ResponseEntity<String>("This is sus", HttpStatus.BAD_REQUEST);
             }
             if (reminderRepository.checkrecords(newreminder.getTaskname(), authcreds[0])>5){
-                logger.info("create reminder call end");
+                logger.warn("create reminder call end: Bad Request");
                 return new ResponseEntity<String>("Task exceeds maximum reminders", HttpStatus.BAD_REQUEST);
             }
 
@@ -68,15 +68,15 @@ public class ReminderController {
                 reminder.setUsertask(task);
 
                 reminderRepository.save(reminder);
-                logger.info("create reminder call end");
+                logger.info("create reminder call end: Succesful");
 
                 return new ResponseEntity(HttpStatus.CREATED);
             }
-            logger.info("create reminder call end");
+            logger.warn("create reminder call end: Unauthorized");
 
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
-        logger.info("create reminder call end");
+        logger.warn("create reminder call end: Unauthorized");
 
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }

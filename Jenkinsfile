@@ -48,8 +48,19 @@ pipeline {
 
             steps{
                 sh'''
-                latest_version_url=$(curl -H "Authorization: Bearer $GITHUB_TOKEN" -s https://api.github.com/repos/csye7125-fall2022-group01/helm-chart/releases/latest | grep "browser_download_url.*tgz")
+                latest_version_url=$(curl -H "Authorization: Bearer $GITHUB_TOKEN" -s https://api.github.com/repos/csye7125-fall2022-group01/helm-chart/releases/latest | grep "zipball_url" | cut -d : -f 2,3 | cut -c 3- | rev | cut -c 3- | rev )
                 echo $latest_version_url
+            
+                curl -X GET $latest_version_url -LO \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer $GITHUB_TOKEN"\
+                -H "X-GitHub-Api-Version: 2022-11-28"
+                mkdir -p webapp
+                
+                version_number="${latest_version_url##*/}"
+                echo $version_number
+                unzip $version_number -d webapp
+                
                 '''
             }
         }
@@ -93,7 +104,7 @@ pipeline {
 
 
             // steps{
-                // TAG=$(curl -H "Authorization: Bearer $GITHUB_TOKEN" --silent "https://api.github.com/repos/csye7125-fall2022-group01/helm-chart/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+                // TAG=$(curl -H "Authorization: Bearer $GITHUB_TOKEN" --silent "https://api.github.com/repos/csye7125-fall2022-group01/helm-chart/releases/latest" | grep '"tag_name":' | sed -E 's/."([^"]+)"./\1/')
             //     sh'''
             //     URL=$(curl \
             //     -H "Authorization: Bearer $GITHUB_TOKEN" \
@@ -111,8 +122,11 @@ pipeline {
         stage('Helm Release') {
             steps{
                 withKubeConfig([credentialsId: 'jenkins-agent', serverUrl: 'https://api.kops.prod.applicationbhan.me']) {
+                sh 'helm upgrade webapp webapp/csye7125-*/ -i -n apps --create-namespace'
+                //sh 'helm uninstall webapp'
                 sh 'helm list -n apps'
                 sh 'ls'
+                sh 'rm -rf webapp'
                 }
             }
         }

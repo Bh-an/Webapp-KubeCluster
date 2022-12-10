@@ -55,7 +55,7 @@ public class UserController {
         listRepository.save(newlist);
 
         AppUser responseuser = userRepository.finduserbyusername(newuser.getUsername());
-        logger.info("create user call end");
+        logger.info("create user call end: Created user");
         return new ResponseEntity<AppUser>(responseuser, HttpStatus.CREATED);
     }
 
@@ -100,14 +100,14 @@ public class UserController {
                 }
                 user.accountupdate();
                 userRepository.save(user);
-                logger.info("update user call end");
+                logger.info("update user call end: Succesful");
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
-            logger.info("update user call end");
+            logger.warn("update user call end: Unauthorised");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
         }
-        logger.info("update user call end");
+        logger.warn("update user call end: Unauthorised");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 

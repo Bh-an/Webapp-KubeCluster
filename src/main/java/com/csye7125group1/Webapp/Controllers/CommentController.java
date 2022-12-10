@@ -47,7 +47,7 @@ public class CommentController {
         if (authcreds!=null){
 
             if (userRepository.checkrecords(authcreds[0])==0 || taskRepository.checkrecords(newcomment.getTaskname(), authcreds[0])==0){
-                logger.info("create comment call end");
+                logger.info("create comment call end: Bad request");
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
 
@@ -62,15 +62,15 @@ public class CommentController {
                 comment.setUsertask(task);
 
                 commentRepository.save(comment);
-                logger.info("create comment call end");
+                logger.info("create comment call end: Succesful");
 
                 return new ResponseEntity(HttpStatus.CREATED);
             }
-            logger.info("create comment call end");
+            logger.warn("create comment call end: Unauthorized");
 
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
-        logger.info("create comment call end");
+        logger.warn("create comment call end: Unauthorized");
 
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }

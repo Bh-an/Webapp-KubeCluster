@@ -8,9 +8,9 @@ import java.util.List;
 public interface SearchTaskRepository
         extends ElasticsearchRepository<SearchTask, String> {
 
-    List<SearchTask> findByTask(String task);
+    Iterable<SearchTask> findByTaskContaining(String task);
 
-    List<SearchTask> findBySummaryContaining(String summary);
+    Iterable<SearchTask> findBySummaryContaining(String summary);
 
 }
 
