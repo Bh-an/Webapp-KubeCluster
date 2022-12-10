@@ -8,6 +8,8 @@ import com.csye7125group1.Webapp.Entities.TaskReminders;
 import com.csye7125group1.Webapp.Entities.UserTasks;
 import com.csye7125group1.Webapp.Repositories.*;
 import com.csye7125group1.Webapp.Utility.Authenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +24,7 @@ import javax.validation.Valid;
 
 @RestController
 public class ReminderController {
-
+    private static final Logger logger = LoggerFactory.getLogger(ReminderController.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -40,14 +42,17 @@ public class ReminderController {
 
     @PostMapping(path = "/v1/task/createreminder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createreminder(@Valid @RequestBody CreateReminder newreminder, @RequestHeader("Authorization") String authheader) {
+        logger.info("create reminder call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds!=null){
 
             if (userRepository.checkrecords(authcreds[0])==0 || taskRepository.checkrecords(newreminder.getTaskname(), authcreds[0])==0){
+                logger.info("create reminder call end");
                 return new ResponseEntity<String>("This is sus", HttpStatus.BAD_REQUEST);
             }
             if (reminderRepository.checkrecords(newreminder.getTaskname(), authcreds[0])>5){
+                logger.info("create reminder call end");
                 return new ResponseEntity<String>("Task exceeds maximum reminders", HttpStatus.BAD_REQUEST);
             }
 
@@ -63,12 +68,15 @@ public class ReminderController {
                 reminder.setUsertask(task);
 
                 reminderRepository.save(reminder);
+                logger.info("create reminder call end");
 
                 return new ResponseEntity(HttpStatus.CREATED);
             }
+            logger.info("create reminder call end");
 
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
+        logger.info("create reminder call end");
 
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }

@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 public class TaskController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -40,12 +41,11 @@ public class TaskController {
     @Autowired
     KafkaPublishService kafkaProducer;
 
-    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @PostMapping(path = "/v1/task/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserTasks> createtask(@Valid @RequestBody CreateTask newtask, @RequestHeader("Authorization") String authheader) {
         String[] authcreds = authenticator.getauthcreds(authheader);
-
+        logger.info("task create call start");
         logger.info("v1/task/create API called with username: " +  authcreds[0]);
 
         if (authcreds != null) {
@@ -82,6 +82,7 @@ public class TaskController {
 
     @PutMapping(path = "/v1/task/updatetask", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updatetask(@RequestBody UpdateTask updatedtask, @RequestHeader("Authorization") String authheader) {
+        logger.info("update task endpoint called");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds != null) {
@@ -122,12 +123,15 @@ public class TaskController {
                     user.accountupdate();
                     taskRepository.save(task);
                     userRepository.save(user);
+                    logger.info("update task call end");
                     return new ResponseEntity(HttpStatus.NO_CONTENT);
                 }
 
+                logger.info("update task call end");
                 return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
             }
+            logger.info("update task call end");
 
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
@@ -136,6 +140,7 @@ public class TaskController {
 
     @DeleteMapping(path = "/v1/task", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deletetask(@RequestBody UpdateTask updatedtask, @RequestHeader("Authorization") String authheader) {
+        logger.info("delete task call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds != null) {
@@ -165,21 +170,23 @@ public class TaskController {
 
                 taskRepository.delete(task);
 
-
+                logger.info("delete task call end");
                 return new ResponseEntity(HttpStatus.NO_CONTENT);
             }
 
+            logger.info("delete task call end");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
         }
 
+        logger.info("delete task call end");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
 
     @GetMapping(path = "/v1/task/show", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ShowTask> viewtask(@RequestBody UpdateTask updatedtask, @RequestHeader("Authorization") String authheader) {
-
+        logger.info("view task call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds!=null){
@@ -197,20 +204,22 @@ public class TaskController {
 //                Map<String, List<String>> responsemap = new HashMap<String, List<String>>();
 
 
-
+                logger.info("view task call end");
                 return new ResponseEntity<ShowTask>(showtask, HttpStatus.OK);
 
             }
+            logger.info("view task call end");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
+        logger.info("view task call end");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
     }
 
     @GetMapping(path = "/v1/task", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> viewtasks(@RequestBody CreateList targetlist, @RequestHeader("Authorization") String authheader) {
-
+        logger.info("view tasks call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds!=null){
@@ -231,13 +240,15 @@ public class TaskController {
 //                Map<String, List<String>> responsemap = new HashMap<String, List<String>>();
 
 
-
+                logger.info("view tasks call end");
                 return new ResponseEntity<List<String>>(tasklist, HttpStatus.OK);
 
             }
+            logger.info("view tasks call end");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
+        logger.info("view tasks call end");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
     }

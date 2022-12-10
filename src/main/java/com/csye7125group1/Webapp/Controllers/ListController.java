@@ -8,6 +8,8 @@ import com.csye7125group1.Webapp.Entities.UserTasks;
 import com.csye7125group1.Webapp.Repositories.ListRepository;
 import com.csye7125group1.Webapp.Repositories.UserRepository;
 import com.csye7125group1.Webapp.Utility.Authenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +23,7 @@ import java.util.List;
 
 @RestController
 public class ListController {
-
+    private static final Logger logger = LoggerFactory.getLogger(ListController.class);
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -33,6 +35,7 @@ public class ListController {
 
     @PostMapping(path = "/v1/list/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createlist(@Valid@RequestBody CreateList newlist, @RequestHeader("Authorization") String authheader) {
+        logger.info("list create call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds!=null){
@@ -48,18 +51,19 @@ public class ListController {
 
                 list.setAppuser(user);
                 listRepository.save(list);
-
+                logger.info("list create call end");
                 return new ResponseEntity<String>(list.getListname(), HttpStatus.CREATED);
             }
-
+            logger.info("list create call end");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
-
+        logger.info("list create call end");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
     @PutMapping(path = "/v1/list/rename", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateuser(@RequestBody UpdateList newlist, @RequestHeader("Authorization") String authheader) {
+        logger.info("update list call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds!=null){
@@ -72,18 +76,20 @@ public class ListController {
                 list.setListname(newlist.getNewlistname());
 
                 listRepository.save(list);
-
+                logger.info("update list call end");
                 return new ResponseEntity<String>("Old list name: " + newlist.getOldlistname() + "\nNew list name: " + list.getListname(), HttpStatus.CREATED);
             }
+            logger.info("update list call end");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
+        logger.info("update list call end");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping(path = "/v1/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> viewlists(@RequestHeader("Authorization") String authheader) {
-
+        logger.info("view list call start");
         String[] authcreds = authenticator.getauthcreds(authheader);
 
         if (authcreds!=null){
@@ -99,11 +105,14 @@ public class ListController {
                     lists.add(list.getListname());
                 }
 
+                logger.info("view list call end");
                 return new ResponseEntity<List<String>>(lists, HttpStatus.OK);
             }
+            logger.info("view list call end");
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
+        logger.info("view list call end");
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
     }

@@ -21,7 +21,7 @@ public class MainController {
     //@ResponseStatus(HttpStatus.OK)
     public ResponseEntity health() {
 //        statsd.incrementCounter("server.get.healthy");
-        logger.info("Healthy endpoint called");
+//        logger.info("Healthy endpoint called");
 //        Healthzresponse response = new Healthzresponse("Success");
         return new ResponseEntity(HttpStatus.OK);
 
