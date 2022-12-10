@@ -27,6 +27,16 @@ public class MainController {
 
     }
 
+    @GetMapping(path = "/healthyboi", produces = MediaType.APPLICATION_JSON_VALUE)
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity healthyboi() {
+//        statsd.incrementCounter("server.get.healthy");
+//        logger.info("Healthy endpoint called");
+//        Healthzresponse response = new Healthzresponse("Success");
+        return new ResponseEntity(HttpStatus.OK);
+
+    }
+
     @GetMapping(path = "/ready", produces = MediaType.APPLICATION_JSON_VALUE)
     //@ResponseStatus(HttpStatus.OK)
     public ResponseEntity readiness() {
