@@ -37,7 +37,7 @@ java -jar target/Webapp-0.0.1-SNAPSHOT.jar
 
 ### On kubernetes cluster (aws)
 
-- Setup kubernetes cluster (Using Terraform and Kops: [repo link](https://github.com/Bh-an/jenkins-ami-build "Kubernetes cluster infra")))
-- Add supporting architecture to the cluster (Using preconfigured Helm-Chart: [repo link](https://github.com/Bh-an/jenkins-ami-build "Infrastructure helmchart")) )
+- Setup kubernetes cluster (Using Terraform and Kops: [repo link](https://github.com/Bh-an/Kubernetes_cluster_terraform "Kubernetes cluster infra")))
+- Add supporting architecture to the cluster (Using preconfigured Helm-Chart: [repo link](TBA "Infrastructure helmchart")) )
 - Change application.properties, then build and publish to docker using dockerfile
-- Run container in kubernetes cluster (Using Helm to run app in cluster: [repo link](https://github.com/Bh-an/jenkins-ami-build "Webapp helmchart"))
+- Run container in kubernetes cluster (Using Helm to run app in cluster: [repo link](TBA "Webapp helmchart"))
